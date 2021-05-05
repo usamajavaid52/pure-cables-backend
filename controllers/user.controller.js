@@ -26,18 +26,14 @@ UserController.registerUser = async(req, res) => {
 
     } catch (ex) {
         if (ex.code === 11000) {
-            res
-                .send({
-                    message: 'This email has been registered already',
-                })
-                .status(500);
+            res.send({
+                message: 'This email has been registered already',
+            }).status(500);
         } else {
-            res
-                .send({
-                    message: 'Error',
-                    detail: ex
-                })
-                .status(500);
+            res.send({
+                message: 'Error',
+                detail: ex
+            }).status(500);
         }
     }
 };
@@ -55,7 +51,7 @@ UserController.signIn = async(req, res) => {
         if (!result) {
             // this means result is null
             res.status(401).send({
-                Error: 'This user does not exists.'
+                message: 'This user does not exists.'
             });
         } else {
             // email did exist
@@ -71,26 +67,32 @@ UserController.signIn = async(req, res) => {
                 console.log('match', process.env.JWT_KEY);
                 res.send({ message: 'Successfully Logged in', token: token });
             } else {
-                console.log('password does not match');
-                res.status(401).send({ message: 'Wrong email or Password' });
+                console.log('Password does not match');
+                res.status(401).send({ message: 'Wrong email or password' });
             }
         }
 
     } catch (ex) {
-        if (ex.code === 11000) {
-            res
-                .send({
-                    message: 'This email has been registered already',
-                })
-                .status(500);
-        } else {
-            res
-                .send({
-                    message: 'Error',
-                    detail: ex
-                })
-                .status(500);
-        }
+
+        res.send({
+            message: 'Error',
+            detail: ex
+        }).status(500);
+
+    }
+};
+
+UserController.getUsers = async(req, res) => {
+    try {
+
+        const result = await Users.find();
+        res.send({ users: result }).status(200);
+
+    } catch (ex) {
+        res.send({
+            message: 'Error',
+            detail: ex
+        }).status(500);
     }
 };
 
