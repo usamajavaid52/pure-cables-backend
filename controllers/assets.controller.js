@@ -97,7 +97,7 @@ AssetsController.deleteAsset = async(req, res) => {
     try {
         const _id = req.params._id;
 
-        const result = await Inventory.findOneAndDelete({
+        const result = await Assets.findOneAndDelete({
             _id: _id
         });
 
@@ -115,9 +115,8 @@ AssetsController.deleteAsset = async(req, res) => {
 
 AssetsController.deleteMultipleAssets = async(req, res) => {
     try {
-        const query = req.body;
-        console.log(query);
-        const result = await Property.deleteMany({ _id: { $in: query } });
+        const query = req.body.idArray;
+        const result = await Assets.deleteMany({ _id: { $in: query } });
         res.status(200).send({
             code: 200,
             message: `${result.deletedCount} Assets Deleted Successfully`,
