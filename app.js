@@ -3,7 +3,7 @@ const app = express();
 const http = require('http');
 const mongoose = require('mongoose');
 const server = http.createServer(app);
-require('dotenv').config();
+require('dotenv').config({ path: '.env' });
 const errorHandler = require("./middleware/error-handler");
 const errorMessage = require("./middleware/error-message");
 const accessControls = require("./middleware/access-controls");
@@ -52,7 +52,7 @@ app.use(express.static("public"));
 
 app.get('/', function(req, res) {
     res.status(200).send({
-        message: 'Express backend server'
+        message: process.env.MongoURL
     });
 });
 
