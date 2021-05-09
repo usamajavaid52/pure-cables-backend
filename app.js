@@ -25,6 +25,7 @@ const AssetsRoutes = require('./routes/assets.route');
 
 // config mongodb
 // const mongoCon = process.env.MongoURL;
+
 const mongoCon = process.env.MongoProductionUrl;
 
 // mongoose.connect(mongoCon);
