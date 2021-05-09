@@ -52,7 +52,7 @@ app.use(express.static("public"));
 
 app.get('/', function(req, res) {
     res.status(200).send({
-        message: process.env.MongoURL
+        message: 'Express backend server'
     });
 });
 
