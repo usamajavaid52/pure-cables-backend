@@ -84,7 +84,6 @@ UserController.signIn = async(req, res) => {
 
 UserController.getUsers = async(req, res) => {
     try {
-
         const result = await Users.find();
         res.send({ users: result }).status(200);
 
@@ -97,7 +96,95 @@ UserController.getUsers = async(req, res) => {
 };
 
 
+UserController.updateUser = async(req, res) => {
+    if (!req.params._id) {
+        res.status(500).send({
+            message: 'ID missing'
+        });
+    }
+    try {
+        const _id = req.params._id;
+        let updates = req.body;
 
+        if (updates.password) {
+            const password = updates.password;
+            var salt = bcrypt.genSaltSync(10);
+            var hash = bcrypt.hashSync(password, salt);
+            updates.password = hash;
+        }
+
+        runUpdate(_id, updates, res);
+
+
+    } catch (error) {
+        console.log('error', error);
+        return res.status(500).send(error);
+    }
+
+};
+
+async function runUpdate(_id, updates, res) {
+
+    try {
+        const result = await Users.updateOne({
+            _id: _id
+        }, {
+            $set: updates
+        }, {
+            upsert: true,
+            runValidators: true
+        }); {
+            if (result.nModified == 1) {
+                res.status(200).send({
+                    code: 200,
+                    message: "Updated Successfully"
+                });
+            } else if (result.upserted) {
+                res.status(200).send({
+                    code: 200,
+                    message: "Created Successfully"
+                });
+            } else {
+                res
+                    .status(422)
+                    .send({
+                        code: 422,
+                        message: 'Unprocessible Entity'
+                    });
+            }
+        }
+    } catch (error) {
+        console.log('error', error);
+        return res.status(500).send(error);
+    }
+}
+
+
+
+
+UserController.deleteUser = async(req, res) => {
+    if (!req.params._id) {
+        res.status(500).send({
+            message: 'ID missing'
+        });
+    }
+    try {
+        const _id = req.params._id;
+
+        const result = await Users.findOneAndDelete({
+            _id: _id
+        });
+
+        res.status(200).send({
+            code: 200,
+            message: "Deleted Successfully"
+        });
+
+    } catch (error) {
+        console.log('error', error);
+        return res.status(500).send(error);
+    }
+};
 
 
 
