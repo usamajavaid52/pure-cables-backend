@@ -22,6 +22,8 @@ app.use(bodyParser.json()); // to support JSON-encoded bodies
 
 const UsersRoutes = require('./routes/user.route');
 const AssetsRoutes = require('./routes/assets.route');
+const InventoryRoutes = require('./routes/inventory.route');
+
 
 // config mongodb
 // const mongoCon = process.env.MongoURL;
@@ -64,6 +66,7 @@ app.use(cors());
 // Routes which should handle requests
 app.use("/auth", UsersRoutes);
 app.use("/assets", AssetsRoutes);
+app.use("/inventory", InventoryRoutes);
 
 
 app.use(errorHandler);
