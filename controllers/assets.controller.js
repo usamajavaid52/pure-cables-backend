@@ -127,5 +127,29 @@ AssetsController.deleteMultipleAssets = async(req, res) => {
 };
 
 
+AssetsController.searchByDate = async(req, res) => {
+    try {
+
+        let { startDate, endDate } = req.query;
+
+        var formattedEndDate = new Date(endDate);
+        formattedEndDate.setHours(24);
+        date = {
+            date: { $gte: new Date(startDate), $lte: formattedEndDate }
+        };
+
+        let result = await Assets.find(date);
+        console.log(result);
+
+        res.status(200).send({
+            code: 200,
+            assets: result,
+        });
+
+    } catch (error) {
+        return res.status(500).send(error);
+    }
+}
+
 
 module.exports = AssetsController;

@@ -6,6 +6,7 @@ const auth = require('../middleware/check-auth');
 
 
 router.get("/", auth, InventoryController.getInventories);
+router.get("/date", auth, InventoryController.searchByDate);
 router.post("/", auth, InventoryController.addInventory);
 router.put("/:_id", auth, InventoryController.updateInventory);
 router.delete("/:_id", auth, InventoryController.deleteInventory);
