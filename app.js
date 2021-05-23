@@ -21,16 +21,15 @@ app.use(bodyParser.json()); // to support JSON-encoded bodies
 // Requiring Routes
 
 const UsersRoutes = require('./routes/user.route');
-const AssetsRoutes = require('./routes/assets.route');
+const LedgerRoutes = require('./routes/ledger.route');
 const InventoryRoutes = require('./routes/inventory.route');
 
 
 // config mongodb
-// const mongoCon = process.env.MongoURL;
-// 
-const mongoCon = process.env.MongoProductionUrl;
+//const mongoCon = process.env.MongoURL;
 
-// mongoose.connect(mongoCon);
+ const mongoCon = process.env.MongoProductionUrl;
+
 mongoose.connect(mongoCon, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
 
 mongoose.connection.on("connected", function() {
@@ -65,7 +64,7 @@ app.use(cors());
 
 // Routes which should handle requests
 app.use("/auth", UsersRoutes);
-app.use("/assets", AssetsRoutes);
+app.use("/ledger", LedgerRoutes);
 app.use("/inventory", InventoryRoutes);
 
 

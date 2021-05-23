@@ -4,7 +4,7 @@ const shortid = require("shortid");
 const Schema = mongoose.Schema;
 
 
-const Assets = new Schema({
+const Ledger = new Schema({
     _id: {
         type: String,
         default: shortid.generate,
@@ -18,16 +18,19 @@ const Assets = new Schema({
     billNumber: {
         type: String,
     },
-    grossWeight: {
-        type: String,
+    weight: {
+        type: Number,
     },
-    bardanaWeight: { type: String },
-    netWeight: { type: String },
-    billetWeight: { type: String },
-    safiWeight: { type: String },
-    waste: { type: Number },
+    bardanaWeight: { type: Number },
+    saafi: { type: Number },
+    rate: { type: Number },
+    totalPrice: { type: Number },
+    debit: { type: Number },
+    credit: { type: Number },
+    balance: { type: Number },
+    ledgerType: { type: String },
     date: { type: Date, default: Date.now() }
 
 });
 
-module.exports = mongoose.model("Assets", Assets);
+module.exports = mongoose.model("Ledger", Ledger);

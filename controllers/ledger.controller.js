@@ -1,7 +1,7 @@
-const AssetsController = {};
-const Assets = require("../models/assets.model");
+const LedgerController = {};
+const Assets = require("../models/ledger.model");
 
-AssetsController.getAssets = async(req, res) => {
+LedgerController.getAssets = async(req, res) => {
     try {
         let assets = await Assets.find();
         res.send({ assets: assets }).status(200);
@@ -13,7 +13,7 @@ AssetsController.getAssets = async(req, res) => {
     }
 }
 
-AssetsController.addAsset = async(req, res) => {
+LedgerController.addAsset = async(req, res) => {
     Assets.create(req.body, function(err, result) {
         if (err) {
             res.status(500).send(err);
@@ -28,7 +28,7 @@ AssetsController.addAsset = async(req, res) => {
     });
 }
 
-AssetsController.updateAsset = async(req, res) => {
+LedgerController.updateAsset = async(req, res) => {
     if (!req.params._id) {
         res.status(500).send({
             message: 'ID missing'
@@ -88,7 +88,7 @@ async function runUpdate(_id, updates, res) {
 }
 
 
-AssetsController.deleteAsset = async(req, res) => {
+LedgerController.deleteAsset = async(req, res) => {
     if (!req.params._id) {
         res.status(500).send({
             message: 'ID missing'
@@ -113,7 +113,7 @@ AssetsController.deleteAsset = async(req, res) => {
 };
 
 
-AssetsController.deleteMultipleAssets = async(req, res) => {
+LedgerController.deleteMultipleAssets = async(req, res) => {
     try {
         const query = req.body.idArray;
         const result = await Assets.deleteMany({ _id: { $in: query } });
@@ -127,7 +127,7 @@ AssetsController.deleteMultipleAssets = async(req, res) => {
 };
 
 
-AssetsController.searchByDate = async(req, res) => {
+LedgerController.searchByDate = async(req, res) => {
     try {
 
         let { startDate, endDate } = req.query;
@@ -152,4 +152,4 @@ AssetsController.searchByDate = async(req, res) => {
 }
 
 
-module.exports = AssetsController;
+module.exports = LedgerController;
