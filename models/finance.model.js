@@ -20,7 +20,10 @@ const Finance = new Schema({
     },
     debit: { type: Number },
     credit: { type: Number },
+    balance: { type: Number },
     ledgerType: { type: String },
+    track: { type: Array },
+    total: { type: Number },
     date: { type: Date, default: Date.now() }
 
 });

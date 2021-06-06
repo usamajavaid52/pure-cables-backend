@@ -1,5 +1,6 @@
 const LedgerController = {};
 const Assets = require("../models/ledger.model");
+const Finance = require("../models/finance.model");
 
 LedgerController.getAssets = async(req, res) => {
     try {
@@ -14,10 +15,51 @@ LedgerController.getAssets = async(req, res) => {
 }
 
 LedgerController.addAsset = async(req, res) => {
-    Assets.create(req.body, function(err, result) {
+
+    if (req.body.credit) {
+        req.body.balance = req.body.totalPrice - req.body.credit;
+    }
+    if (req.body.debit) {
+        req.body.balance = req.body.totalPrice - req.body.debit;
+    }
+    if (!req.body.credit && !req.body.debit) {
+        req.body.balance = req.body.totalPrice;
+    }
+    if (req.body.bardanaWeight) {
+        req.body.saafi = req.body.weight - req.body.bardanaWeight;
+    }
+    Assets.create(req.body, async function(err, result) {
         if (err) {
             res.status(500).send(err);
         } else {
+            var financeData = {
+                date: result.date,
+                debit: result.debit,
+                credit: result.credit,
+                ledgerType: result.ledgerType,
+                ledgerId: result._id,
+                billNumber: result.billNumber,
+                detail: result.partyName,
+                balance: result.balance,
+                total: result.totalPrice
+
+            }
+            if (result.credit) {
+                financeData["track"] = [{
+                    date: result.date,
+                    credit: result.credit,
+                    balance: result.balance
+                }]
+            }
+            if (result.debit) {
+                financeData["track"] = [{
+                    date: result.date,
+                    debit: result.debit,
+                    balance: result.balance
+                }]
+            }
+            const finace = new Finance(financeData);
+            const financeResult = await finace.save();
             var data = {
                 code: 200,
                 message: 'Data inserted successfully',
