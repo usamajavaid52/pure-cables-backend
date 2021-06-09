@@ -1,6 +1,7 @@
 const LedgerController = {};
 const Assets = require("../models/ledger.model");
 const Finance = require("../models/finance.model");
+const Stock = require("../models/inventory.model");
 
 LedgerController.getAssets = async(req, res) => {
     try {
@@ -39,7 +40,7 @@ LedgerController.addAsset = async(req, res) => {
                 ledgerType: result.ledgerType,
                 ledgerId: result._id,
                 billNumber: result.billNumber,
-                detail: result.partyName,
+                detail: result.partyName + "(" + result.productName + ")",
                 balance: result.balance,
                 total: result.totalPrice
 
@@ -57,6 +58,19 @@ LedgerController.addAsset = async(req, res) => {
                     debit: result.debit,
                     balance: result.balance
                 }]
+            }
+
+            if (result.ledgerType == 'purchase') {
+                var stockData = {
+                    purchaseId: result._id,
+                    productName: result.productName,
+                    weight: result.saafi,
+                    data: result.date
+
+                }
+
+                const stock = new Stock(stockData);
+                const stockResult = await stock.save();
             }
             const finace = new Finance(financeData);
             const financeResult = await finace.save();
@@ -181,7 +195,6 @@ LedgerController.searchByDate = async(req, res) => {
         };
 
         let result = await Assets.find(date);
-        console.log(result);
 
         res.status(200).send({
             code: 200,

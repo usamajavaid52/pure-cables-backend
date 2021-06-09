@@ -24,6 +24,8 @@ const UsersRoutes = require('./routes/user.route');
 const LedgerRoutes = require('./routes/ledger.route');
 const InventoryRoutes = require('./routes/inventory.route');
 const FinanceRoutes = require('./routes/finance.routes');
+const MillingRoutes = require('./routes/milling.routes');
+const BaryRoutes = require('./routes/bary.routes');
 
 
 // config mongodb
@@ -68,6 +70,8 @@ app.use("/auth", UsersRoutes);
 app.use("/ledger", LedgerRoutes);
 app.use("/inventory", InventoryRoutes);
 app.use("/finance", FinanceRoutes);
+app.use("/milling", MillingRoutes);
+app.use("/bary", BaryRoutes);
 
 
 app.use(errorHandler);

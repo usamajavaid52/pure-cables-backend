@@ -12,15 +12,10 @@ const Inventory = new Schema({
     productName: {
         type: String,
     },
-    billNumber: {
-        type: String,
+    weight: {
+        type: Number,
     },
-    debit: {
-        type: String,
-    },
-    credit: { type: String },
-    balance: { type: String },
-    dc: { type: String },
+    purchaseId: { type: String },
     date: { type: Date, default: Date.now() }
 
 });

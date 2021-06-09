@@ -14,6 +14,32 @@ FinanceController.get = async(req, res) => {
     }
 }
 
+FinanceController.getStat = async(req, res) => {
+    try {
+        await Finance.aggregate(
+            [{
+                $group: {
+                    _id: Date.now(),
+                    totalCredit: { $sum: "$credit" },
+                    totalDebit: { $sum: "$debit" },
+                    count: { $sum: 1 }
+                }
+            }]
+        ).exec((err, result) => {
+            res.status(200).send({
+                code: 200,
+                stat: result
+            })
+
+        })
+    } catch (error) {
+        res.send({
+            message: 'Error',
+            detail: ex
+        }).status(500);
+    }
+}
+
 FinanceController.add = async(req, res) => {
     if (req.body.credit) {
         req.body.balance = req.body.total - req.body.credit;
@@ -58,7 +84,6 @@ FinanceController.update = async(req, res) => {
     }
     try {
 
-
         if (req.body.credit) {
             req.body.balance = req.body.total - req.body.credit;
         }
@@ -66,16 +91,13 @@ FinanceController.update = async(req, res) => {
             req.body.balance = req.body.total - req.body.debit;
         }
 
-        console.log(req.body);
         if (req.body.ledgerId) {
-
             const ledgerUpdates = {
                 credit: req.body.credit,
                 debit: req.body.debit,
-                balance: req.body.balance
-            }
+                balance: req.body.balance,
 
-            console.log("idPresentt", ledgerUpdates);
+            }
             const result = await Ledger.updateOne({
                 _id: req.body.ledgerId
             }, {
@@ -99,7 +121,7 @@ FinanceController.update = async(req, res) => {
 };
 
 async function runUpdate(_id, updates, res) {
-    console.log(_id, updates);
+
     try {
         const result = await Finance.updateOne({
             _id: _id
@@ -188,7 +210,6 @@ FinanceController.searchByDate = async(req, res) => {
         };
 
         let result = await Finance.find(date);
-        console.log(result);
 
         res.status(200).send({
             code: 200,
